@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>วิทยาศาสตร์ ม.1</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700;800&amp;family=Orbitron:wght@400;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    
+    :root {
+      --bg-dark: #0a0a1a;
+      --surface: #1a1a2e;
+      --text-light: #e0e6ff;
+      --accent-cyan: #00d4ff;
+      --accent-pink: #ff006e;
+    }
+    
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: var(--bg-dark);
+      overflow-x: hidden;
+    }
+    
+    .font-orbitron { font-family: 'Orbitron', monospace; }
+    
+    /* Animated Background */
+    .cosmic-bg {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 0, 110, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 70%),
+        var(--bg-dark);
+      z-index: -2;
+    }
+    
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      animation: float-particle 15s infinite ease-in-out;
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+    
+    .particle:nth-child(odd) {
+      background: var(--accent-pink);
+      box-shadow: 0 0 10px var(--accent-pink);
+    }
+    
+    @keyframes float-particle {
+      0%, 100% { transform: translateY(100%) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100%) rotate(720deg); opacity: 0; }
+    }
+    
+    /* DNA Helix Animation */
+    .dna-container {
+      position: relative;
+      width: 60px;
+      height: 200px;
+      transform-style: preserve-3d;
+      animation: dna-rotate 8s linear infinite;
+    }
+    
+    @keyframes dna-rotate {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+    
+    .dna-strand {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .dna-node {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .dna-link {
+      position: absolute;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
+      left: 50%;
+      transform-origin: left center;
+    }
+    
+    /* Atom Animation */
+    .atom {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+    
+    .nucleus {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-cyan));
+      border-radius: 50%;
+      box-shadow: 0 0 30px var(--accent-pink);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+    
+    .orbit {
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      border-radius: 50%;
+    }
+    
+    .orbit:nth-child(1) { animation: orbit-spin 3s linear infinite; }
+    .orbit:nth-child(2) { animation: orbit-spin 4s linear infinite reverse; transform: rotateX(60deg); }
+    .orbit:nth-child(3) { animation: orbit-spin 5s linear infinite; transform: rotateY(60deg); }
+    
+    @keyframes orbit-spin {
+      from { transform: rotateZ(0deg); }
+      to { transform: rotateZ(360deg); }
+    }
+    
+    .electron {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 15px var(--accent-cyan);
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    /* Glowing Cards */
+    .glow-card {
+      background: rgba(26, 26, 46, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 20px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glow-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(45deg, var(--accent-cyan), transparent, var(--accent-pink));
+      border-radius: 22px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    
+    .glow-card:hover::before { opacity: 1; }
+    
+    .glow-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+    }
+    
+    /* Neon Text */
+    .neon-text {
+      text-shadow: 
+        0 0 10px var(--accent-cyan),
+        0 0 20px var(--accent-cyan),
+        0 0 40px var(--accent-cyan),
+        0 0 80px var(--accent-cyan);
+      animation: neon-flicker 3s ease-in-out infinite;
+    }
+    
+    @keyframes neon-flicker {
+      0%, 100% { opacity: 1; }
+      92% { opacity: 1; }
+      93% { opacity: 0.8; }
+      94% { opacity: 1; }
+      96% { opacity: 0.9; }
+      97% { opacity: 1; }
+    }
+    
+    /* Floating Animation */
+    .float-anim {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    /* Typing Effect */
+    .typing-text {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid var(--accent-cyan);
+      animation: typing 3s steps(40) 1s forwards, blink 0.8s step-end infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+    
+    /* Wave Animation for Section */
+    .wave-border {
+      position: relative;
+    }
+    
+    .wave-border::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, 
+        var(--accent-cyan) 0%, 
+        var(--accent-pink) 50%, 
+        var(--accent-cyan) 100%);
+      background-size: 200% 100%;
+      animation: wave-move 3s linear infinite;
+    }
+    
+    @keyframes wave-move {
+      from { background-position: 0% 0%; }
+      to { background-position: 200% 0%; }
+    }
+    
+    /* Button Glow */
+    .btn-glow {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink));
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-cyan));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .btn-glow:hover::before { opacity: 1; }
+    
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(0, 212, 255, 0.5);
+    }
+    
+    .btn-glow span { position: relative; z-index: 1; }
+    
+    /* Scroll Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Topic Icons Animation */
+    .topic-icon {
+      font-size: 3rem;
+      animation: icon-bounce 2s ease-in-out infinite;
+    }
+    
+    @keyframes icon-bounce {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.1) rotate(-5deg); }
+      75% { transform: scale(1.1) rotate(5deg); }
+    }
+    
+    /* Progress Ring */
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+    
+    .progress-ring circle {
+      stroke-dasharray: 251;
+      stroke-dashoffset: 251;
+      animation: progress-fill 2s ease-out forwards;
+    }
+    
+    @keyframes progress-fill {
+      to { stroke-dashoffset: 50; }
+    }
+    
+    /* Stagger animation for cards */
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+    .stagger-6 { animation-delay: 0.6s; }
+
+    /* Nav link hover */
+    .nav-link {
+      position: relative;
+      transition: color 0.3s;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-cyan);
+      transition: width 0.3s;
+    }
+    
+    .nav-link:hover::after { width: 100%; }
+    .nav-link:hover { color: var(--accent-cyan); }
+    
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .modal-content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 2rem;
+      z-index: 101;
+      max-width: 90%;
+      width: 500px;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      transition: transform 0.3s;
+    }
+    
+    .modal-overlay.active .modal-content {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full text-gray-100"><!-- Cosmic Background -->
+  <div class="cosmic-bg"></div><!-- Floating Particles -->
+  <div class="particles" id="particles"></div><!-- Main Container -->
+  <div class="h-full overflow-auto" id="main-container"><!-- Navigation -->
+   <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 wave-border" style="background: rgba(10, 10, 26, 0.9); backdrop-filter: blur(10px);">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="atom" style="width: 40px; height: 40px;">
+       <div class="nucleus" style="width: 10px; height: 10px;"></div>
+       <div class="orbit" style="border-width: 1px;">
+        <div class="electron" style="width: 4px; height: 4px; top: -2px;"></div>
+       </div>
+      </div><span class="font-orbitron font-bold text-xl neon-text" id="nav-title">SCI LAB</span>
+     </div>
+     <div class="hidden md:flex items-center gap-8"><a href="#topics" class="nav-link text-gray-300">บทเรียน</a> <a href="#experiments" class="nav-link text-gray-300">การทดลอง</a> <a href="#quiz" class="nav-link text-gray-300">แบบทดสอบ</a> <button class="btn-glow px-6 py-2" onclick="showModal()"> <span>เริ่มเรียน</span> </button>
+     </div>
+    </div>
+   </nav><!-- Hero Section -->
+   <header class="min-h-screen flex items-center justify-center px-6 pt-20">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+     <div class="text-center lg:text-left">
+      <div class="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-pink-500/20 border border-cyan-500/30 mb-6"><span class="text-cyan-400 text-sm font-medium">🚀 การเรียนรู้แบบใหม่</span>
+      </div>
+      <h1 class="font-orbitron text-4xl md:text-6xl font-black mb-6 leading-tight" id="main-title"><span class="bg-gradient-to-r from-cyan-400 via-blue-500 to-pink-500 bg-clip-text text-transparent">วิทยาศาสตร์</span> <br><span class="text-white">มัธยมศึกษาปีที่ 1</span></h1>
+      <p class="text-xl text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0" id="welcome-text">ยินดีต้อนรับสู่โลกแห่งการค้นพบ! เรียนรู้วิทยาศาสตร์อย่างสนุกสนานผ่านการทดลองเสมือนจริง</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"><button class="btn-glow px-8 py-4 text-lg" onclick="showModal()"> <span>🔬 เริ่มการผจญภัย</span> </button> <button class="px-8 py-4 rounded-full border-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 transition-all"> 📺 ดูวิดีโอแนะนำ </button>
+      </div><!-- Stats -->
+      <div class="grid grid-cols-3 gap-6 mt-12">
+       <div class="text-center">
+        <div class="text-3xl font-bold text-cyan-400">
+         12+
+        </div>
+        <div class="text-sm text-gray-500">
+         บทเรียน
+        </div>
+       </div>
+       <div class="text-center">
+        <div class="text-3xl font-bold text-pink-400">
+         50+
+        </div>
+        <div class="text-sm text-gray-500">
+         การทดลอง
+        </div>
+       </div>
+       <div class="text-center">
+        <div class="text-3xl font-bold text-purple-400">
+         100+
+        </div>
+        <div class="text-sm text-gray-500">
+         แบบฝึกหัด
+        </div>
+       </div>
+      </div>
+     </div><!-- DNA & Atom Animation -->
+     <div class="flex justify-center items-center gap-8 float-anim">
+      <div class="dna-container" id="dna"></div>
+      <div class="atom">
+       <div class="nucleus"></div>
+       <div class="orbit">
+        <div class="electron"></div>
+       </div>
+       <div class="orbit" style="transform: rotateX(60deg);">
+        <div class="electron"></div>
+       </div>
+       <div class="orbit" style="transform: rotateY(60deg);">
+        <div class="electron"></div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </header><!-- Topics Section -->
+   <section id="topics" class="py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+     <div class="text-center mb-16 reveal">
+      <h2 class="font-orbitron text-3xl md:text-5xl font-bold mb-4"><span class="neon-text">📚 บทเรียนทั้งหมด</span></h2>
+      <p class="text-gray-400 text-lg">เลือกบทเรียนที่คุณต้องการเรียนรู้</p>
+     </div>
+     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Topic Cards -->
+      <div class="glow-card p-6 reveal stagger-1" onclick="showTopicDetail('cells')">
+       <div class="topic-icon mb-4">
+        🧬
+       </div>
+       <h3 class="font-bold text-xl mb-2 text-cyan-400">หน่วยของสิ่งมีชีวิต</h3>
+       <p class="text-gray-400 text-sm mb-4">เซลล์ โครงสร้าง และการทำงานของเซลล์พืชและสัตว์</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-pink-400">8 บทเรียนย่อย</span>
+        <div class="w-16 h-16">
+         <svg class="progress-ring" width="64" height="64"><circle cx="32" cy="32" r="28" stroke="rgba(0,212,255,0.2)" stroke-width="4" fill="none" /> <circle cx="32" cy="32" r="28" stroke="url(#gradient1)" stroke-width="4" fill="none" stroke-linecap="round" /> <defs>
+           <lineargradient id="gradient1">
+            <stop offset="0%" stop-color="#00d4ff" />
+            <stop offset="100%" stop-color="#ff006e" />
+           </lineargradient>
+          </defs>
+         </svg>
+        </div>
+       </div>
+      </div>
+      <div class="glow-card p-6 reveal stagger-2" onclick="showTopicDetail('matter')">
+       <div class="topic-icon mb-4">
+        ⚗️
+       </div>
+       <h3 class="font-bold text-xl mb-2 text-cyan-400">สารและการเปลี่ยนแปลง</h3>
+       <p class="text-gray-400 text-sm mb-4">สถานะของสาร การเปลี่ยนแปลงทางกายภาพและเคมี</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-pink-400">10 บทเรียนย่อย</span>
+        <div class="w-16 h-16">
+         <svg class="progress-ring" width="64" height="64"><circle cx="32" cy="32" r="28" stroke="rgba(0,212,255,0.2)" stroke-width="4" fill="none" /> <circle cx="32" cy="32" r="28" stroke="url(#gradient1)" stroke-width="4" fill="none" stroke-linecap="round" style="stroke-dashoffset: 100;" />
+         </svg>
+        </div>
+       </div>
+      </div>
+      <div class="glow-card p-6 reveal stagger-3" onclick="showTopicDetail('force')">
+       <div class="topic-icon mb-4">
+        🎯
+       </div>
+       <h3 class="font-bold text-xl mb-2 text-cyan-400">แรงและการเคลื่อนที่</h3>
+       <p class="text-gray-400 text-sm mb-4">แรงลัพธ์ แรงเสียดทาน และกฎการเคลื่อนที่</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-pink-400">6 บทเรียนย่อย</span>
+        <div class="w-16 h-16">
+         <svg class="progress-ring" width="64" height="64"><circle cx="32" cy="32" r="28" stroke="rgba(0,212,255,0.2)" stroke-width="4" fill="none" /> <circle cx="32" cy="32" r="28" stroke="url(#gradient1)" stroke-width="4" fill="none" stroke-linecap="round" style="stroke-dashoffset: 150;" />
+         </svg>
+        </div>
+       </div>
+      </div>
+      <div class="glow-card p-6 reveal stagger-4" onclick="showTopicDetail('energy')">
+       <div class="topic-icon mb-4">
+        ⚡
+       </div>
+       <h3 class="font-bold text-xl mb-2 text-cyan-400">พลังงาน</h3>
+       <p class="text-gray-400 text-sm mb-4">รูปแบบของพลังงาน การถ่ายโอนและการแปลงพลังงาน</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-pink-400">7 บทเรียนย่อย</span>
+        <div class="w-16 h-16">
+         <svg class="progress-ring" width="64" height="64"><circle cx="32" cy="32" r="28" stroke="rgba(0,212,255,0.2)" stroke-width="4" fill="none" /> <circle cx="32" cy="32" r="28" stroke="url(#gradient1)" stroke-width="4" fill="none" stroke-linecap="round" style="stroke-dashoffset: 180;" />
+         </svg>
+        </div>
+       </div>
+      </div>
+      <div class="glow-card p-6 reveal stagger-5" onclick="showTopicDetail('earth')">
+       <div class="topic-icon mb-4">
+        🌍
+       </div>
+       <h3 class="font-bold text-xl mb-2 text-cyan-400">โลกและอวกาศ</h3>
+       <p class="text-gray-400 text-sm mb-4">โครงสร้างโลก บรรยากาศ และระบบสุริยะ</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-pink-400">9 บทเรียนย่อย</span>
+        <div class="w-16 h-16">
+         <svg class="progress-ring" width="64" height="64"><circle cx="32" cy="32" r="28" stroke="rgba(0,212,255,0.2)" stroke-width="4" fill="none" /> <circle cx="32" cy="32" r="28" stroke="url(#gradient1)" stroke-width="4" fill="none" stroke-linecap="round" style="stroke-dashoffset: 120;" />
+         </svg>
+        </div>
+       </div>
+      </div>
+      <div class="glow-card p-6 reveal stagger-6" onclick="showTopicDetail('eco')">
+       <div class="topic-icon mb-4">
+        🌿
+       </div>
+       <h3 class="font-bold text-xl mb-2 text-cyan-400">ระบบนิเวศ</h3>
+       <p class="text-gray-400 text-sm mb-4">ความสัมพันธ์ในระบบนิเวศ ห่วงโซ่อาหาร และการอนุรักษ์</p>
+       <div class="flex items-center justify-between"><span class="text-xs text-pink-400">5 บทเรียนย่อย</span>
+        <div class="w-16 h-16">
+         <svg class="progress-ring" width="64" height="64"><circle cx="32" cy="32" r="28" stroke="rgba(0,212,255,0.2)" stroke-width="4" fill="none" /> <circle cx="32" cy="32" r="28" stroke="url(#gradient1)" stroke-width="4" fill="none" stroke-linecap="round" style="stroke-dashoffset: 200;" />
+         </svg>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Interactive Experiment Section -->
+   <section id="experiments" class="py-20 px-6" style="background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.05), transparent);">
+    <div class="max-w-7xl mx-auto">
+     <div class="text-center mb-16 reveal">
+      <h2 class="font-orbitron text-3xl md:text-5xl font-bold mb-4"><span class="neon-text">🔬 ห้องทดลองเสมือนจริง</span></h2>
+      <p class="text-gray-400 text-lg">ลองทำการทดลองแบบ Interactive</p>
+     </div><!-- Experiment Demo -->
+     <div class="glow-card p-8 max-w-4xl mx-auto reveal">
+      <h3 class="font-orbitron text-2xl font-bold text-center mb-8 text-cyan-400">⚡ การทดลอง: วงจรไฟฟ้าอย่างง่าย</h3>
+      <div class="flex flex-col md:flex-row items-center justify-center gap-8"><!-- Circuit Visualization -->
+       <div class="relative w-64 h-64 border-4 border-dashed border-gray-700 rounded-lg p-4">
+        <div class="absolute top-4 left-4 w-12 h-20 bg-gradient-to-b from-red-500 to-red-700 rounded flex items-center justify-center text-xs font-bold">
+         🔋
+        </div>
+        <div id="bulb" class="absolute top-4 right-4 w-12 h-12 rounded-full bg-gray-700 transition-all duration-500 flex items-center justify-center text-2xl">
+         💡
+        </div>
+        <div id="wire" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border-4 border-gray-600 rounded-full transition-all duration-300"></div><button id="switch-btn" onclick="toggleCircuit()" class="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-gray-800 border-2 border-cyan-500 rounded-full text-cyan-400 hover:bg-cyan-500/20 transition-all"> ⚡ เปิดสวิตช์ </button>
+       </div><!-- Explanation -->
+       <div class="max-w-sm">
+        <h4 class="font-bold text-lg mb-4 text-pink-400">📖 หลักการ</h4>
+        <p class="text-gray-400 text-sm mb-4">วงจรไฟฟ้าอย่างง่ายประกอบด้วย แหล่งกำเนิดไฟฟ้า (แบตเตอรี่) สายไฟ และเครื่องใช้ไฟฟ้า (หลอดไฟ)</p>
+        <div id="circuit-status" class="p-4 rounded-lg bg-gray-800/50 border border-gray-700"><span class="text-yellow-400">⏸️ วงจรเปิด - ไม่มีกระแสไหล</span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Quiz Section -->
+   <section id="quiz" class="py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+     <div class="text-center mb-16 reveal">
+      <h2 class="font-orbitron text-3xl md:text-5xl font-bold mb-4"><span class="neon-text">🎮 ทดสอบความรู้</span></h2>
+      <p class="text-gray-400 text-lg">ลองตอบคำถามเพื่อทดสอบความเข้าใจ</p>
+     </div>
+     <div class="glow-card p-8 max-w-2xl mx-auto reveal">
+      <div id="quiz-container">
+       <div class="text-center mb-6"><span class="px-4 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-sm">คำถามที่ <span id="current-q">1</span>/5</span>
+       </div>
+       <h3 id="question" class="text-xl font-bold text-center mb-8">เซลล์พืชมีส่วนประกอบใดที่เซลล์สัตว์ไม่มี?</h3>
+       <div id="options" class="space-y-4"><button onclick="checkAnswer(0)" class="w-full p-4 rounded-xl border-2 border-gray-700 hover:border-cyan-500 hover:bg-cyan-500/10 transition-all text-left flex items-center gap-4"> <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-cyan-400 font-bold">A</span> <span>นิวเคลียส</span> </button> <button onclick="checkAnswer(1)" class="w-full p-4 rounded-xl border-2 border-gray-700 hover:border-cyan-500 hover:bg-cyan-500/10 transition-all text-left flex items-center gap-4"> <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-cyan-400 font-bold">B</span> <span>ผนังเซลล์</span> </button> <button onclick="checkAnswer(2)" class="w-full p-4 rounded-xl border-2 border-gray-700 hover:border-cyan-500 hover:bg-cyan-500/10 transition-all text-left flex items-center gap-4"> <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-cyan-400 font-bold">C</span> <span>ไมโทคอนเดรีย</span> </button> <button onclick="checkAnswer(3)" class="w-full p-4 rounded-xl border-2 border-gray-700 hover:border-cyan-500 hover:bg-cyan-500/10 transition-all text-left flex items-center gap-4"> <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-cyan-400 font-bold">D</span> <span>ไรโบโซม</span> </button>
+       </div>
+       <div id="result" class="hidden mt-6 p-4 rounded-xl text-center"></div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="py-12 px-6 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto text-center">
+     <div class="flex items-center justify-center gap-3 mb-6">
+      <div class="atom" style="width: 30px; height: 30px;">
+       <div class="nucleus" style="width: 8px; height: 8px;"></div>
+       <div class="orbit" style="border-width: 1px;">
+        <div class="electron" style="width: 3px; height: 3px; top: -1.5px;"></div>
+       </div>
+      </div><span class="font-orbitron font-bold text-lg">SCI LAB M.1</span>
+     </div>
+     <p class="text-gray-500 text-sm">© 2026 Science KCP Lab - เว็บไซต์การเรียนรู้วิทยาศาสตร์</p>
+     <p class="text-gray-600 text-xs mt-2">สร้างด้วย ❤️ เพื่อนักเรียนโรงเรียนคุระบุรีชัยพัฒนาพิทยาคม</p>
+     <p class="text-gray-600 text-xs mt-2">สร้างโดย เด็กชายพชรดนัย บัวตุม ชั้นมัธยมศึกษาปีที่ 1 เริ่มทำ 19/02/2026
+     </p>
+     <p class="text-gray-600 text-xs mt-2"></p>
+    </div>
+   </footer>
+  </div><!-- Modal -->
+  <div id="modal-overlay" class="modal-overlay" onclick="hideModal()">
+   <div class="modal-content" onclick="event.stopPropagation()">
+    <h3 class="font-orbitron text-2xl font-bold text-center mb-6 text-cyan-400">🚀 พร้อมเริ่มเรียนแล้ว!</h3>
+    <p class="text-gray-400 text-center mb-6">เลือกระดับความยากที่ต้องการ</p>
+    <div class="space-y-3"><button class="w-full btn-glow py-3" onclick="hideModal()"> <span>🌱 ระดับพื้นฐาน</span> </button> <button class="w-full btn-glow py-3" onclick="hideModal()"> <span>🌿 ระดับปานกลาง</span> </button> <button class="w-full btn-glow py-3" onclick="hideModal()"> <span>🌳 ระดับท้าทาย</span> </button>
+    </div><button class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl" onclick="hideModal()">×</button>
+   </div>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      site_title: 'SCI LAB',
+      welcome_text: 'ยินดีต้อนรับสู่โลกแห่งการค้นพบ! เรียนรู้วิทยาศาสตร์อย่างสนุกสนานผ่านการทดลองเสมือนจริง',
+      background_color: '#0a0a1a',
+      surface_color: '#1a1a2e',
+      text_color: '#e0e6ff',
+      accent_cyan: '#00d4ff',
+      accent_pink: '#ff006e',
+      font_family: 'Prompt',
+      font_size: 16
+    };
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          // Update site title
+          const navTitle = document.getElementById('nav-title');
+          if (navTitle) navTitle.textContent = config.site_title || defaultConfig.site_title;
+          
+          // Update welcome text
+          const welcomeText = document.getElementById('welcome-text');
+          if (welcomeText) welcomeText.textContent = config.welcome_text || defaultConfig.welcome_text;
+          
+          // Update colors
+          const root = document.documentElement;
+          root.style.setProperty('--bg-dark', config.background_color || defaultConfig.background_color);
+          root.style.setProperty('--surface', config.surface_color || defaultConfig.surface_color);
+          root.style.setProperty('--text-light', config.text_color || defaultConfig.text_color);
+          root.style.setProperty('--accent-cyan', config.accent_cyan || defaultConfig.accent_cyan);
+          root.style.setProperty('--accent-pink', config.accent_pink || defaultConfig.accent_pink);
+          
+          // Update font
+          const customFont = config.font_family || defaultConfig.font_family;
+          document.body.style.fontFamily = `${customFont}, sans-serif`;
+          
+          // Update font size
+          const baseSize = config.font_size || defaultConfig.font_size;
+          document.body.style.fontSize = `${baseSize}px`;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            { get: () => config.background_color || defaultConfig.background_color, set: (v) => window.elementSdk.setConfig({ background_color: v }) },
+            { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => window.elementSdk.setConfig({ surface_color: v }) },
+            { get: () => config.text_color || defaultConfig.text_color, set: (v) => window.elementSdk.setConfig({ text_color: v }) },
+            { get: () => config.accent_cyan || defaultConfig.accent_cyan, set: (v) => window.elementSdk.setConfig({ accent_cyan: v }) },
+            { get: () => config.accent_pink || defaultConfig.accent_pink, set: (v) => window.elementSdk.setConfig({ accent_pink: v }) }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (v) => window.elementSdk.setConfig({ font_family: v })
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (v) => window.elementSdk.setConfig({ font_size: v })
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['site_title', config.site_title || defaultConfig.site_title],
+          ['welcome_text', config.welcome_text || defaultConfig.welcome_text]
+        ])
+      });
+    }
+
+    // Create floating particles
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (10 + Math.random() * 20) + 's';
+        particle.style.animationDelay = Math.random() * 10 + 's';
+        container.appendChild(particle);
+      }
+    }
+    
+    // Create DNA helix
+    function createDNA() {
+      const dna = document.getElementById('dna');
+      const nodes = 10;
+      
+      for (let i = 0; i < nodes; i++) {
+        const y = (i / nodes) * 180 + 10;
+        const angle = (i / nodes) * Math.PI * 4;
+        
+        // Left node
+        const leftNode = document.createElement('div');
+        leftNode.className = 'dna-node';
+        leftNode.style.top = y + 'px';
+        leftNode.style.transform = `translateX(${Math.sin(angle) * 20 - 6}px)`;
+        leftNode.style.background = 'var(--accent-cyan)';
+        leftNode.style.boxShadow = '0 0 10px var(--accent-cyan)';
+        dna.appendChild(leftNode);
+        
+        // Right node
+        const rightNode = document.createElement('div');
+        rightNode.className = 'dna-node';
+        rightNode.style.top = y + 'px';
+        rightNode.style.transform = `translateX(${-Math.sin(angle) * 20 - 6}px)`;
+        rightNode.style.background = 'var(--accent-pink)';
+        rightNode.style.boxShadow = '0 0 10px var(--accent-pink)';
+        dna.appendChild(rightNode);
+        
+        // Link
+        if (i % 2 === 0) {
+          const link = document.createElement('div');
+          link.className = 'dna-link';
+          link.style.top = y + 5 + 'px';
+          link.style.width = Math.abs(Math.sin(angle) * 40) + 'px';
+          link.style.transform = `translateX(${-Math.abs(Math.sin(angle) * 20)}px)`;
+          dna.appendChild(link);
+        }
+      }
+    }
+    
+    // Scroll reveal animation
+    function revealOnScroll() {
+      const reveals = document.querySelectorAll('.reveal');
+      reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const revealTop = el.getBoundingClientRect().top;
+        const revealPoint = 150;
+        
+        if (revealTop < windowHeight - revealPoint) {
+          el.classList.add('active');
+        }
+      });
+    }
+    
+    // Circuit experiment
+    let circuitOn = false;
+    function toggleCircuit() {
+      circuitOn = !circuitOn;
+      const bulb = document.getElementById('bulb');
+      const wire = document.getElementById('wire');
+      const status = document.getElementById('circuit-status');
+      const btn = document.getElementById('switch-btn');
+      
+      if (circuitOn) {
+        bulb.style.background = 'radial-gradient(circle, #fff700, #ffa500)';
+        bulb.style.boxShadow = '0 0 30px #fff700, 0 0 60px #ffa500';
+        wire.style.borderColor = 'var(--accent-cyan)';
+        wire.style.boxShadow = '0 0 20px var(--accent-cyan)';
+        status.innerHTML = '<span class="text-green-400">✅ วงจรปิด - กระแสไหลผ่าน หลอดไฟสว่าง!</span>';
+        btn.textContent = '⚡ ปิดสวิตช์';
+      } else {
+        bulb.style.background = '#374151';
+        bulb.style.boxShadow = 'none';
+        wire.style.borderColor = '#4b5563';
+        wire.style.boxShadow = 'none';
+        status.innerHTML = '<span class="text-yellow-400">⏸️ วงจรเปิด - ไม่มีกระแสไหล</span>';
+        btn.textContent = '⚡ เปิดสวิตช์';
+      }
+    }
+    
+    // Quiz system
+    const quizData = [
+      {
+        question: "เซลล์พืชมีส่วนประกอบใดที่เซลล์สัตว์ไม่มี?",
+        options: ["นิวเคลียส", "ผนังเซลล์", "ไมโทคอนเดรีย", "ไรโบโซม"],
+        correct: 1
+      },
+      {
+        question: "สถานะของสารที่มีปริมาตรคงที่แต่รูปร่างไม่คงที่คือ?",
+        options: ["ของแข็ง", "ของเหลว", "ก๊าซ", "พลาสมา"],
+        correct: 1
+      },
+      {
+        question: "แรงใดที่ทำให้วัตถุตกลงสู่พื้นโลก?",
+        options: ["แรงเสียดทาน", "แรงโน้มถ่วง", "แรงแม่เหล็ก", "แรงลอยตัว"],
+        correct: 1
+      },
+      {
+        question: "การสังเคราะห์ด้วยแสงเกิดขึ้นที่ออร์แกเนลล์ใด?",
+        options: ["ไมโทคอนเดรีย", "คลอโรพลาสต์", "นิวเคลียส", "ไรโบโซม"],
+        correct: 1
+      },
+      {
+        question: "ดาวเคราะห์ดวงใดอยู่ใกล้ดวงอาทิตย์มากที่สุด?",
+        options: ["ศุกร์", "พุธ", "โลก", "อังคาร"],
+        correct: 1
+      }
+    ];
+    
+    let currentQuestion = 0;
+    let score = 0;
+    
+    function checkAnswer(selected) {
+      const result = document.getElementById('result');
+      const options = document.querySelectorAll('#options button');
+      
+      options.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === quizData[currentQuestion].correct) {
+          btn.classList.add('border-green-500', 'bg-green-500/20');
+        } else if (i === selected && i !== quizData[currentQuestion].correct) {
+          btn.classList.add('border-red-500', 'bg-red-500/20');
+        }
+      });
+      
+      result.classList.remove('hidden');
+      if (selected === quizData[currentQuestion].correct) {
+        score++;
+        result.innerHTML = '<span class="text-green-400 text-lg">🎉 ถูกต้อง! เยี่ยมมาก!</span>';
+        result.className = 'mt-6 p-4 rounded-xl text-center bg-green-500/20 border border-green-500';
+      } else {
+        result.innerHTML = '<span class="text-red-400 text-lg">❌ ไม่ถูกต้อง ลองใหม่นะ!</span>';
+        result.className = 'mt-6 p-4 rounded-xl text-center bg-red-500/20 border border-red-500';
+      }
+      
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+        } else {
+          showFinalScore();
+        }
+      }, 2000);
+    }
+    
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      document.getElementById('current-q').textContent = currentQuestion + 1;
+      document.getElementById('question').textContent = q.question;
+      document.getElementById('result').classList.add('hidden');
+      
+      const optionsContainer = document.getElementById('options');
+      optionsContainer.innerHTML = q.options.map((opt, i) => `
+        <button onclick="checkAnswer(${i})" class="w-full p-4 rounded-xl border-2 border-gray-700 hover:border-cyan-500 hover:bg-cyan-500/10 transition-all text-left flex items-center gap-4">
+          <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-cyan-400 font-bold">${String.fromCharCode(65 + i)}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('');
+    }
+    
+    function showFinalScore() {
+      const container = document.getElementById('quiz-container');
+      const percentage = (score / quizData.length) * 100;
+      let emoji = '🎉';
+      let message = 'ยอดเยี่ยมมาก!';
+      
+      if (percentage < 60) {
+        emoji = '💪';
+        message = 'พยายามต่อไปนะ!';
+      } else if (percentage < 80) {
+        emoji = '👍';
+        message = 'ดีมาก!';
+      }
+      
+      container.innerHTML = `
+        <div class="text-center">
+          <div class="text-6xl mb-4">${emoji}</div>
+          <h3 class="text-2xl font-bold mb-4">${message}</h3>
+          <p class="text-4xl font-orbitron text-cyan-400 mb-6">${score}/${quizData.length}</p>
+          <p class="text-gray-400 mb-8">คะแนนของคุณ: ${percentage}%</p>
+          <button onclick="resetQuiz()" class="btn-glow px-8 py-3">
+            <span>🔄 ทำใหม่อีกครั้ง</span>
+          </button>
+        </div>
+      `;
+    }
+    
+    function resetQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById('quiz-container').innerHTML = `
+        <div class="text-center mb-6">
+          <span class="px-4 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-sm">คำถามที่ <span id="current-q">1</span>/5</span>
+        </div>
+        <h3 id="question" class="text-xl font-bold text-center mb-8"></h3>
+        <div id="options" class="space-y-4"></div>
+        <div id="result" class="hidden mt-6 p-4 rounded-xl text-center"></div>
+      `;
+      loadQuestion();
+    }
+    
+    // Modal functions
+    function showModal() {
+      document.getElementById('modal-overlay').classList.add('active');
+    }
+    
+    function hideModal() {
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
+    
+    function showTopicDetail(topic) {
+      showModal();
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      createDNA();
+      loadQuestion();
+      
+      document.getElementById('main-container').addEventListener('scroll', revealOnScroll);
+      revealOnScroll();
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d05e77f73becde6',t:'MTc3MTUwNTU3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
